@@ -18,49 +18,22 @@
 
 int main(void)
 {
-	 uart_init(9600); //Initializing the UART to 9600 baud, 8N1, with no parity
-	 
+	uart_init(9600); //Initializing the UART to 9600 baud, 8N1, with no parity
+	char voltage_char[50];
+	char current_char[50];
+	char power_char[50];
+		
+	sprintf(voltage_char, "RMS Voltage is: %d.%d\n\r", (uint8_t) PeakVoltage, (uint8_t) (PeakVoltage * 10.0) % 10);
+	sprintf(current_char, "Peak Current is: %d\n\r", (uint8_t) PeakCurrent);
+	sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint8_t)Power, (uint8_t) (Power * 10.0) % 10, (uint8_t) (Power * 100.0) % 10);
+
+
    while (1) 
     {
-		// Convert floating-point values to integers for digit extraction
-		uint16_t peak_voltage = PeakVoltage * 10; // Convert to integer (X.YZ -> XYZ)
-		uint16_t peak_current = PeakCurrent;
-		uint16_t power_int = Power * 100; // Convert to integer (X.YZ -> XYZ)
 		
-        // Variables to store extracted digits as characters
-		char rmsDigit1, rmsDigit2, rmsDigit3;
-		extract_digits(peak_voltage, &rmsDigit1, &rmsDigit2, &rmsDigit3);
-
-		char peakDigit1, peakDigit2, peakDigit3;
-		extract_digits(peak_current, &peakDigit1, &peakDigit2, &peakDigit3);
-
-		char powerDigit1, powerDigit2, powerDigit3;
-		extract_digits(power_int, &powerDigit1, &powerDigit2, &powerDigit3);
-		
-		// Transmit each digit to the terminal.
-		uart_transmit_array("RMS Voltage is: ");
-		uart_transmit_byte(rmsDigit1);
-		uart_transmit_byte(rmsDigit2);
-		uart_transmit_byte('.');
-		uart_transmit_byte(rmsDigit3);
-		
-		uart_transmit_array("\n\r");
-		
-		uart_transmit_array("Peak Current is: ");
-		uart_transmit_byte(peakDigit1);
-		uart_transmit_byte(peakDigit2);
-		uart_transmit_byte(peakDigit3);
-		
-		uart_transmit_array("\n\r");
-		
-		uart_transmit_array("Power is: ");
-		uart_transmit_byte(powerDigit1);
-		uart_transmit_byte('.');
-		uart_transmit_byte(powerDigit2);
-		uart_transmit_byte(powerDigit3);
-		
-		uart_transmit_array("\n\r");
-		uart_transmit_array("\n\r");
+		uart_transmit_array(voltage_char);
+		uart_transmit_array(current_char);
+		uart_transmit_array(power_char);
 
 		_delay_ms(1000); // Delay by 1 second
     } 
