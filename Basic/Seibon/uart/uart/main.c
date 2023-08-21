@@ -30,11 +30,17 @@ void uart_transmit_byte(char byte){
 	//Put the byte to be sent into the UDR0 register
 	UDR0 = byte;
 }
-void extract_digits(int *digits, float value){
-	
-}
-char convertToAscii(int digit){
-	return digit + 48;
+void extract_char_digits(char *digits, float value){
+	//Multiples value by 100 then converts to string
+    char strValue[7];
+    value *= 100;
+	int intValue = (int) value;
+	scanf("%d", &intValue);
+	sprintf(strValue, "%d", intValue);
+	//Adds the first 3 digits to the digits array
+	for (int i = 0; i < 3; i++){
+    	digits[i] = strValue[i];
+    }	
 }
 ​
 int main() {
