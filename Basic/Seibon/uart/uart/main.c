@@ -31,14 +31,10 @@ void uart_transmit_byte(char byte){
 	UDR0 = byte;
 }
 void extract_digits(int *digits, float value){
-	//Converts the input value into a number of format XXX
-    while (!(str.isdigit(value))){
-		value *= 10;
-	}
-	//Extracts hundreds, tens, then ones, and puts them in digits array
-	digits[0] = (value/100) % 10;
-	digits[1] = (value/10) % 10;
-	digits[2] = value % 10;
+	
+}
+char convertToAscii(int digit){
+	return digit + 48;
 }
 ​
 int main() {
