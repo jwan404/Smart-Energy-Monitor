@@ -42,13 +42,47 @@ void extract_char_digits(char *digits, float value){
     	digits[i] = strValue[i];
     }	
 }
+//This function transmits an array of bytes via the UART using uart_transmit_byte(char byte) function
+void uart_transmit_array(char* msg){
+	//Loop through each byte in the array
+	for (uint8_t i = 0; i < strlen(msg); i++){
+		uart_transmit_byte(msg[i]); //Transmit each byte using uart_transmit_byte(char byte)
+	}
+}
 ​
 int main() {
 	
 	uart_init(9600);
 	while (1)
 	{ 
+		//Initialise arrays for three different values
+		char digits1[3], digits2[3]; digits3[3];
+		extract_char_digits(digits1, RMSVoltage);
+		extract_char_digits(digits2, PeakCurrent);
+		extract_char_digits(digits3, Power);
 
+		//Print out voltage info
+		uart_transmit_array("RMS Voltage is: ");
+		uart_transmit_byte(digits1[0]);
+		uart_transmit_byte(digits1[1]);
+		uart_transmit_byte('.')
+		uart_transmit_byte(digits1[2]);
+		uart_transmit_array("\n\r");
+
+		//Print out current info
+		uart_transmit_array("Peak Current is: ");
+		uart_transmit_byte(digits2[0]);
+		uart_transmit_byte(digits2[1]);
+		uart_transmit_byte(digits2[2]);
+		uart_transmit_array("\n\r");
+
+		//Print out power info
+		uart_transmit_array("Power is: ");
+		uart_transmit_byte(digits3[0]);
+		uart_transmit_byte('.')
+		uart_transmit_byte(digits3[1]);
+		uart_transmit_byte(digits3[2]);
+		uart_transmit_array("\n\r");
     }
 		 
 }
