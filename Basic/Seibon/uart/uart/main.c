@@ -29,53 +29,11 @@ void uart_transmit_byte(char byte){
 ​
 int main() {
 	
-	int primeNumbers[62];
-	int count = 0;
-​
-	for (int num = 2; num <= 300; ++num) {
-		int isPrime = 1;
-​
-		for (int divisor = 2; divisor < num; ++divisor) {
-			if (num % divisor == 0) {
-				isPrime = 0;
-				break;
-			}
-		}
-​
-		if (isPrime) {
-			primeNumbers[count++] = num;
-		}
-	}
-	
 	uart_init(9600);
-	 while (1)
-	 {
-		 
-		 for (int i = 0; i < sizeof(primeNumbers)/sizeof(primeNumbers[0]); i++)
-		 {
-			 char hundred = (primeNumbers[i]/100) % 10 + '0';
-			 int ten = ((primeNumbers[i]/10) % 10) ;
-			 char tenChar = floor(ten) + '0';
-			 char one = (primeNumbers[i]) % 10 + '0';
-			 
-			 uart_transmit_byte(hundred);
-			 uart_transmit_byte(tenChar);
-			 uart_transmit_byte(one);
-			 uart_transmit_byte(',');
-			 uart_transmit_byte(' ');
-			 _delay_ms(500);
-		 }
-		 
-	 }
-}
-​
+	while (1)
+	{ 
 
-
-int main(void)
-{
-    /* Replace with your application code */
-    while (1) 
-    {
     }
+		 
 }
 
