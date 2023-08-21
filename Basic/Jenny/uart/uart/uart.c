@@ -38,12 +38,9 @@ void uart_transmit_array(char* msg){
 	}
 }
 
-/* uint16_t extract_digits(float number, uint16_t index){
-
-		
-} */
+// Extracts each digit
 void extract_digits(int number, char *digit1, char *digit2, char *digit3) {
-	*digit1 = '0' + number / 100;
-	*digit2 = '0' + (number / 10) % 10;
-	*digit3 = '0' + number % 10;
+	*digit1 = '0' + number / 100; // Converts and stores the hundreds digit.
+	*digit2 = '0' + (number / 10) % 10; // Converts and stores the tens digit.
+	*digit3 = '0' + number % 10; // Converts and stores the ones digit.
 }

@@ -22,10 +22,12 @@ int main(void)
 	 
    while (1) 
     {
-		uint16_t peak_voltage = PeakVoltage * 10;
+		// Convert floating-point values to integers for digit extraction
+		uint16_t peak_voltage = PeakVoltage * 10; // Convert to integer (X.YZ -> XYZ)
 		uint16_t peak_current = PeakCurrent;
-		uint16_t power_int = Power * 100;
+		uint16_t power_int = Power * 100; // Convert to integer (X.YZ -> XYZ)
 		
+        // Variables to store extracted digits as characters
 		char rmsDigit1, rmsDigit2, rmsDigit3;
 		extract_digits(peak_voltage, &rmsDigit1, &rmsDigit2, &rmsDigit3);
 
@@ -35,6 +37,7 @@ int main(void)
 		char powerDigit1, powerDigit2, powerDigit3;
 		extract_digits(power_int, &powerDigit1, &powerDigit2, &powerDigit3);
 		
+		// Transmit each digit to the terminal.
 		uart_transmit_array("RMS Voltage is: ");
 		uart_transmit_byte(rmsDigit1);
 		uart_transmit_byte(rmsDigit2);
@@ -59,7 +62,7 @@ int main(void)
 		uart_transmit_array("\n\r");
 		uart_transmit_array("\n\r");
 
-		_delay_ms(1000);
+		_delay_ms(1000); // Delay by 1 second
     } 
 }
 
