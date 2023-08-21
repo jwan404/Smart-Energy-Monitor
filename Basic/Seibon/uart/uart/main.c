@@ -9,6 +9,10 @@
 #include <avr/io.h> //Needed for using the macros for register addresses
 #include <string.h> //Needed for using strlen()
 #include <util/delay.h> //Needed for using _delay_ms()
+
+#define RMSVoltage 14.5 //Format XX.X
+#define PeakCurrent 125 //Format XXX
+#define Power 1.60  //Format X.XX
 ​
 void uart_init(uint32_t baud_rate){
 	UCSR0A = 0b00000000; //None of the settings here are used
@@ -25,6 +29,16 @@ void uart_transmit_byte(char byte){
 	}
 	//Put the byte to be sent into the UDR0 register
 	UDR0 = byte;
+}
+void extract_digits(int *digits, float value){
+	//Converts the input value into a number of format XXX
+    while (!(str.isdigit(value))){
+		value *= 10;
+	}
+	//Extracts hundreds, tens, then ones, and puts them in digits array
+	digits[0] = (value/100) % 10;
+	digits[1] = (value/10) % 10;
+	digits[2] = value % 10;
 }
 ​
 int main() {
