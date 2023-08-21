@@ -38,7 +38,12 @@ void uart_transmit_array(char* msg){
 	}
 }
 
-uint16_t extract_digits(uint16_t number, uint16_t index){
-	
-	
+/* uint16_t extract_digits(float number, uint16_t index){
+
+		
+} */
+void extract_digits(int number, char *digit1, char *digit2, char *digit3) {
+	*digit1 = '0' + number / 100;
+	*digit2 = '0' + (number / 10) % 10;
+	*digit3 = '0' + number % 10;
 }
