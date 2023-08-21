@@ -43,17 +43,11 @@ void uart_transmit_array(char* msg){
 int main(void)
 {
 	 uart_init(9600); //Initializing the UART to 9600 baud, 8N1, with no parity
-	 char* peakVoltage = PeakVoltage;
-	 char string_pkvoltage[30];
-	 sprintf(string_pkvoltage, "RMS Voltage is: %.1f" );
-	 for (uint8_t i = 0; i < strlen(string_pkvoltage); i++)
-	 {
-		uart_transmit_byte(string_pkvoltage[i]);
-	 }
-  /*  while (1) 
+	 
+   while (1) 
     {
 		uart_transmit_array("RMS Voltage is:")
 		_delay_ms(1000);
-    } */
+    } 
 }
 
