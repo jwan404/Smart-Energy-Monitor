@@ -18,6 +18,8 @@
 #define NUM_SAMPLES 100
 
 volatile uint16_t Vac[NUM_SAMPLES] = {};
+volatile uint16_t IL[NUM_SAMPLES] = {};
+
 float Vref = 2.1;  // Assuming a 2.1V reference voltage
 
 int main(void)
@@ -47,20 +49,27 @@ int main(void)
 			 float voltage_ch1 = adc_result_ch1 * Vref / 1024.0;
 
 			 // Calculate Vac for the i-th sample
-			 Vac[i] = (voltage_ch0 - voltage_ch1) / (Gvs * Gvo);
+			 Vac[i] = (voltage_ch0) / (Gvs * Gvo);
+			 IL[i] =  ((voltage_ch1) / (Gvs * Gvo) / /*shunt resistor*/)
+			 
 		 }
 
 		 // Calculate Vrms using Riemann sum
 		 float sum = 0.0;
+		 float sum_I = 0.0;
 		 for (int i = 0; i < NUM_SAMPLES; i++) {
 			 sum += Vac[i] * Vac[i];
+			 sum_I = IL[i] * IL[i];
 		 }
 
 		 float Vrms = sqrt(sum / NUM_SAMPLES);
+		 float Irms = sqrt(sum_I / NUM_SAMPLES);
+		 float Ipk = Irms * (sqrt(2));
 		 
 		 // Load Vrms value into the display buffer
 		 separate_and_load_characters((uint16_t)(Vrms * 100), 2);
-
+		 separate_and_load_characters((uint16_t)(Ipk * 100). 2);
+		 
 		 // Send the characters to the display
 		 send_next_character_to_display();
 	 }
