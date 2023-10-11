@@ -6,7 +6,7 @@
  */ 
 
 //Code from ADC lab
-
+#include "cpu.h"
 #include "uart.h"
 
 #include <avr/io.h>

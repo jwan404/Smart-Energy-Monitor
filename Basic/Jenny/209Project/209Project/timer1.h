@@ -10,7 +10,7 @@
 #define TIMER1_H_
 
 
-
+void timer1_init();
 
 
 #endif /* TIMER1_H_ */

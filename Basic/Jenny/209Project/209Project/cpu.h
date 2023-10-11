@@ -8,7 +8,7 @@
 
 #ifndef CPU_H_
 #define CPU_H_
-
+#define F_CPU 2000000UL 
 
 
 
