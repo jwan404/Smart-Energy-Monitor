@@ -29,7 +29,7 @@ void init_display(void){
 
 //Populate the array ‘disp_characters[]’ by separating the four digits of ‘number’
 //and then looking up the segment pattern from ‘seg_pattern[]’
-void seperate_and_load_characters(uint16_t number, uint8_t decimal_pos){
+void separate_and_load_characters(uint16_t number, uint8_t decimal_pos){
 	//TODO: finish this function
 	//1. Separate each digit from ‘number’
 	// e.g. if value to display is 1230 the separated digits will be

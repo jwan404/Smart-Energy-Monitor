@@ -33,6 +33,12 @@ int main(void)
 	
 		 for (int i = 0; i < NUM_SAMPLES; i++)
 		 {
+			 // Wait for Timer1 to reach the desired interval (0.02ms)
+			 while (!(TIFR1 & (1 << OCF1A)));
+
+			 // Clear Timer1 Compare Match A flag
+			 TIFR1 |= (1 << OCF1A);
+			 
 			 uint16_t adc_result_ch0 = adc_read_channel_single_conversion(0);
 			 uint16_t adc_result_ch1 = adc_read_channel_single_conversion(1);
 

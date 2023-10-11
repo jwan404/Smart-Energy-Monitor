@@ -22,3 +22,4 @@ void timer0_init() {
 ISR(TIMER0_COMPA_vect) {
 	send_next_character_to_display();
 }
+
