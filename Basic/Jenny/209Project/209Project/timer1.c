@@ -8,11 +8,14 @@
 #include "cpu.h"
 #include "timer1.h"
 #include "adc.h"  // Include the ADC module header if needed
+#include "energyCalculations.h"
+#include "display.h"
+#include "uart.h"
 #include <avr/io.h>
 #include <stdint.h>
 #include <avr/interrupt.h>
 
-float Vref;
+float Vref = 2.1;
 
 void timer1_init() {
 	// Configure Timer1 for CTC (Clear Timer on Compare Match) mode
@@ -44,16 +47,16 @@ ISR(TIMER1_COMPA_vect) {
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
 		
-		uint16_t adc_result_ch0 = adc_read_channel_single_conversion(0);
-		uint16_t adc_result_ch1 = adc_read_channel_single_conversion(1);
+		 adc_result_ch0 = adc_read_channel_single_conversion(0);
+		 adc_result_ch1 = adc_read_channel_single_conversion(1);
 		
 		//Convert adc to mv
 		uint16_t voltage_0_mv = adc_convert_mv(adc_result_ch0);
 		uint16_t voltage_1_mv = adc_convert_mv(adc_result_ch1);
 
 		// Calculate voltage for each channel
-		uint16_t voltage_ch0 = (adc_result_ch0 * 1000) * Vref / 1024.0;
-		uint16_t voltage_ch1 = (adc_result_ch1 * 1000) * Vref / 1024.0;
+		uint16_t voltage_ch0 = (voltage_0_mv * 1000) * Vref / 1024.0;
+		uint16_t voltage_ch1 = (voltage_1_mv * 1000) * Vref / 1024.0;
 
 		// Calculate Vac for the i-th sample
 		Vac[i] = (voltage_ch0) / ((1/23) * 1.12)/*(Gvs * Gvo)*/;

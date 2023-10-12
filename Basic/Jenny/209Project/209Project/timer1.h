@@ -9,7 +9,6 @@
 #ifndef TIMER1_H_
 #define TIMER1_H_
 
-extern float Vref = 2.1;
 void timer1_init();
 
 

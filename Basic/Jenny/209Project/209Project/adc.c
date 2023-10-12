@@ -32,8 +32,6 @@ uint16_t adc_read_channel_single_conversion(uint8_t channel) {
 
 // Function to convert raw ADC count to millivolts (mV)
 uint16_t adc_convert_mv(uint16_t raw_adc_value) {
-	// Define the ADC reference voltage (Vref) in volts
-	float Vref = 2.1;  // Assuming a 2.1V reference voltage
 
 	// Calculate the voltage resolution in millivolts (mV) per ADC count
 	float voltage_resolution_mV = Vref / 1024.0;  // 10-bit ADC

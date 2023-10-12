@@ -10,7 +10,7 @@
 #define CPU_H_
 #define F_CPU 2000000UL 
 #define NUM_SAMPLES 100
-
+extern float Vref;
 
 
 #endif /* CPU_H_ */
