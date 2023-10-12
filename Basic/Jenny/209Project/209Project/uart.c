@@ -28,3 +28,9 @@ void trans_array(char* msg){
 		trans_byte(msg[i]);
 	}
 }
+
+void trans_float(float value) {
+	char buffer[20];
+	snprintf(buffer, sizeof(buffer), "%f\n", value);
+	trans_array(buffer);
+}

@@ -10,9 +10,13 @@
 #include "uart.h"
 #include "adc.h"
 #include "display.h"
+#include "timer0.h"
+#include "timer1.h"
 
 //Libraries
 #include <avr/io.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <math.h>
 
 #define NUM_SAMPLES 100
@@ -22,6 +26,7 @@ volatile uint16_t IL[NUM_SAMPLES] = {};
 
 float Vref = 2.1;  // Assuming a 2.1V reference voltage
 
+
 int main(void)
 {
 	uart_init(9600);
@@ -29,10 +34,11 @@ int main(void)
 	timer0_init();
 	timer1_init();
 	init_display();
+	
     /* Replace with your application code */
     while (1) 
     {
-	
+		
 		 for (int i = 0; i < NUM_SAMPLES; i++)
 		 {
 			 // Wait for Timer1 to reach the desired interval (0.02ms)
@@ -49,8 +55,8 @@ int main(void)
 			 float voltage_ch1 = adc_result_ch1 * Vref / 1024.0;
 
 			 // Calculate Vac for the i-th sample
-			 Vac[i] = (voltage_ch0) / (Gvs * Gvo);
-			 IL[i] =  ((voltage_ch1) / (Gvs * Gvo) / /*shunt resistor*/)
+			 Vac[i] = (voltage_ch0) / (0.1 * 1)/*(Gvs * Gvo)*/;
+			 IL[i] =  (((voltage_ch1) / (0.5 * 2)/*(Gvs_1 * Gvo_1)*/) / 0.5);
 			 
 		 }
 
@@ -66,14 +72,23 @@ int main(void)
 		 float Irms = sqrt(sum_I / NUM_SAMPLES);
 		 float Ipk = Irms * (sqrt(2));
 		 
+		 // Calculate power and energy (modify as needed)
+		 float power = Vrms * Irms;  // Calculate power based on Vrms and Irms
+		 float energy = power * 0.002;  // Calculate energy based on power and time
+		 
 		 // Load Vrms value into the display buffer
 		 separate_and_load_characters((uint16_t)(Vrms * 100), 2);
-		 separate_and_load_characters((uint16_t)(Ipk * 100). 2);
+		 separate_and_load_characters((uint16_t)(Ipk * 100), 2);
 		 
+		  // Transmit Vrms, Ipk, power, and energy through UART
+		  trans_float(Vrms);
+		  trans_float(Ipk);
+		  trans_float(power);
+		  trans_float(energy);
+
 		 // Send the characters to the display
 		 send_next_character_to_display();
 	 }
-	 
 	  
 }
 

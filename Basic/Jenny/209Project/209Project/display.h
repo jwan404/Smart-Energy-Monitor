@@ -8,6 +8,8 @@
 
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
+#include <stdint.h>
+
 
 void init_display(void);
 void separate_and_load_characters(uint16_t number, uint8_t decimal_pos);

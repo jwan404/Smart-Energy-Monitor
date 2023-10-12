@@ -12,14 +12,14 @@
 #include <avr/io.h>
 #include <stdint.h>
 
-void adc_init(){
+void adc_init() {
 	ADMUX = 0b01000010;
 	ADCSRA = 0b10000100;
 	ADCSRB = 0b00000000;
 	DIDR0 = 0b00000000;
 }
 
-uint16_t adc_read_channel_single_conversion(uint8_t channel){
+uint16_t adc_read_channel_single_conversion(uint8_t channel) {
 	ADMUX &= 0xF0; //Clear channel selection
 	//ADMUX |= channel; //Set the channel to convert
 	ADMUX |= channel;
