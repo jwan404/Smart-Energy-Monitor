@@ -29,10 +29,9 @@ int main(void)
 	timer0_init();
 	timer1_init();
 	init_display();
-    /* Replace with your application code */
     while (1) 
     {
-	
+		// Sampling voltage and current 100 times
 		 for (int i = 0; i < NUM_SAMPLES; i++)
 		 {
 			 // Wait for Timer1 to reach the desired interval (0.02ms)
@@ -54,7 +53,7 @@ int main(void)
 			 
 		 }
 
-		 // Calculate Vrms using Riemann sum
+		 // Calculate Vrms and Irms using Riemann sum
 		 float sum = 0.0;
 		 float sum_I = 0.0;
 		 for (int i = 0; i < NUM_SAMPLES; i++) {
