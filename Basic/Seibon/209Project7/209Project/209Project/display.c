@@ -27,24 +27,16 @@ void init_display(void){
 	//SHCP = 3 SHST = 5 SHDS = 4
 }
 
-//Populate the array ‘disp_characters[]’ by separating the four digits of ‘number’
-//and then looking up the segment pattern from ‘seg_pattern[]’
+//Populate the array ï¿½disp_characters[]ï¿½ by separating the four digits of ï¿½numberï¿½
+//and then looking up the segment pattern from ï¿½seg_pattern[]ï¿½
 void separate_and_load_characters(uint16_t number, uint8_t decimal_pos){
 	//TODO: finish this function
-	//1. Separate each digit from ‘number’
-	// e.g. if value to display is 1230 the separated digits will be
-	// ‘1’, ‘2’, ‘3’ and ‘0’
-	disp_characters[0] = (number / 1000) % 10;
-	disp_characters[1] = (number / 100) % 10;
-	disp_characters[2] = (number / 10) % 10;
-	disp_characters[3] = number % 10;
+	// Separate each digit in number, assign segment pattern to each digit
+	disp_characters[0] = seg_pattern[(number / 1000) % 10];
+	disp_characters[1] = seg_pattern[(number / 100) % 10];
+	disp_characters[2] = seg_pattern[(number / 10) % 10];
+	disp_characters[3] = seg_pattern[number % 10];
 
-	//2. Lookup pattern required to display each digit from ‘seg_pattern[]’
-	// and store this pattern in appropriate position of ‘disp_characters[]’
-	disp_characters[0] = seg_pattern[disp_characters[0]];
-	disp_characters[1] = seg_pattern[disp_characters[1]];
-	disp_characters[2] = seg_pattern[disp_characters[2]];
-	disp_characters[3] = seg_pattern[disp_characters[3]];
 }
 
 void send_next_character_to_display(void){
@@ -52,7 +44,7 @@ void send_next_character_to_display(void){
 	// Ensure SH_CP and SH_ST are both set to logic 0
 	PORTC &= ~(1 <<	PORTC3);
 	PORTC &= ~(1 << PORTC5);
-	//1. Based on ‘disp_position’, load the digit to send to a local variable
+	//1. Based on ï¿½disp_positionï¿½, load the digit to send to a local variable
 	uint8_t digit;
 	digit = disp_characters[disp_position];
 	
@@ -97,11 +89,11 @@ void send_next_character_to_display(void){
 	
 	
 	// (i.e. set Ds1, Ds2, Ds3 and Ds4 appropriately)
-	//6. Increment ‘disp_position’ so the next of the 4 digits will be displayed
-	// when function is called again from ISR (reset ‘disp_position’ after 3)
+	//6. Increment ï¿½disp_positionï¿½ so the next of the 4 digits will be displayed
+	// when function is called again from ISR (reset ï¿½disp_positionï¿½ after 3)
 	disp_position++;
 
-	// Reset ‘disp_position’ after 3 to start over
+	// Reset ï¿½disp_positionï¿½ after 3 to start over
 	if (disp_position >= 4) {
 		disp_position = 0;
 	}
