@@ -13,7 +13,6 @@
 #include "timer0.h"
 #include "timer1.h"
 #include "energyCalculations.h"
-#include "globals.h"
 
 
 //Libraries
@@ -21,12 +20,11 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
+#include <avr/interrupt.h>
 
-const uint8_t NUM_SAMPLES = 100;
-extern uint16_t Vac[NUM_SAMPLES] = {};
-extern uint16_t IL[NUM_SAMPLES] = {};
+volatile uint16_t Vac[NUM_SAMPLES] = {};
+volatile uint16_t IL[NUM_SAMPLES] = {};
 
-float Vref = 2.1;  // Assuming a 2.1V reference voltage
 
 
 int main(void)

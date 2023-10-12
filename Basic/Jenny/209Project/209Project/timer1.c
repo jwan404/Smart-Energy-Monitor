@@ -4,15 +4,15 @@
  * Created: 10/10/2023 6:28:44 pm
  *  Author: Jenny W
  */ 
-#define F_CPU 2000000UL
 // timer1.c
-
+#include "cpu.h"
 #include "timer1.h"
 #include "adc.h"  // Include the ADC module header if needed
-#include "globals.h"
 #include <avr/io.h>
+#include <stdint.h>
 #include <avr/interrupt.h>
 
+float Vref;
 
 void timer1_init() {
 	// Configure Timer1 for CTC (Clear Timer on Compare Match) mode

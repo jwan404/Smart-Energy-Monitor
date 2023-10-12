@@ -14,6 +14,6 @@
 void uart_init(uint32_t baud);
 void trans_byte(char byte);
 void trans_array(char* msg);
-void trans_float(float value);
+void trans_float(uint16_t value);
 
 #endif /* UART_H_ */
