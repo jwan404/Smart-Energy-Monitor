@@ -8,7 +8,8 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-const uint8_t seg_pattern[10]={0b00111111, 0b00000110, 0b01011011, 0b01001111, 0b01100110, 0b01101101, 0b01111101, 0b00000111, 0b01111111, 0b011011111};
+const uint8_t seg_pattern[10]={0b00111111, 0b00000110, 0b01011011, 0b01001111, 0b01100110, 0b01101101, 0b01111101, 0b00000111, 0b01111111, 0b01101111};
+const uint8_t dp_seg_pattern[10]={0b10111111, 0b10000110, 0b11011011, 0b11001111, 0b11100110, 0b11101101, 0b11111101, 0b10000111, 0b11111111, 0b11101111};
 
 //4 characters to be displayed on Ds1 to Ds 4
 static volatile uint8_t disp_characters[4]={0,0,0,0};
@@ -30,13 +31,14 @@ void init_display(void){
 //Populate the array �disp_characters[]� by separating the four digits of �number�
 //and then looking up the segment pattern from �seg_pattern[]�
 void separate_and_load_characters(uint16_t number, uint8_t decimal_pos){
-	//TODO: finish this function
 	// Separate each digit in number, assign segment pattern to each digit
 	disp_characters[0] = seg_pattern[(number / 1000) % 10];
 	disp_characters[1] = seg_pattern[(number / 100) % 10];
 	disp_characters[2] = seg_pattern[(number / 10) % 10];
 	disp_characters[3] = seg_pattern[number % 10];
 
+	// Using decimal_pos to light up the decimal point at the current digit
+	disp_characters[decimal_pos] = dp_seg_pattern[(number / (1000/(10*decimal_pos))) % 10];
 }
 
 void send_next_character_to_display(void){
