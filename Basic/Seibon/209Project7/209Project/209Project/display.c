@@ -32,10 +32,9 @@ void init_display(void){
 //and then looking up the segment pattern from �seg_pattern[]�
 void separate_and_load_characters(uint16_t number, uint8_t decimal_pos){
 	// Separate each digit in number, assign segment pattern to each digit
-	disp_characters[0] = seg_pattern[(number / 1000) % 10];
-	disp_characters[1] = seg_pattern[(number / 100) % 10];
-	disp_characters[2] = seg_pattern[(number / 10) % 10];
-	disp_characters[3] = seg_pattern[number % 10];
+	for (int i = 0; i < 3; i++){
+		disp_characters[i] = seg_pattern[(number / (1000/(10*i))) % 10];
+	}
 
 	// Using decimal_pos to light up the decimal point at the current digit
 	disp_characters[decimal_pos] = dp_seg_pattern[(number / (1000/(10*decimal_pos))) % 10];
