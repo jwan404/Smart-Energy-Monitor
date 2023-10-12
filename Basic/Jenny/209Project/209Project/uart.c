@@ -29,7 +29,7 @@ void trans_array(char* msg){
 	}
 }
 
-void trans_float(float value) {
+void trans_float(uint16_t value) {
 	char buffer[20];
 	snprintf(buffer, sizeof(buffer), "%f\n", value);
 	trans_array(buffer);

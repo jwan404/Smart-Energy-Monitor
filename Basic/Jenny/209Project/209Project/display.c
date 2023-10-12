@@ -45,6 +45,11 @@ void separate_and_load_characters(uint16_t number, uint8_t decimal_pos){
 	disp_characters[1] = seg_pattern[disp_characters[1]];
 	disp_characters[2] = seg_pattern[disp_characters[2]];
 	disp_characters[3] = seg_pattern[disp_characters[3]];
+	
+	//if statement for decimal point.
+	if (decimal_pos == disp_position) {
+		disp_characters[disp_position] |= (1 << 7); // Set the decimal point bit
+	}
 }
 
 void send_next_character_to_display(void){
@@ -55,6 +60,7 @@ void send_next_character_to_display(void){
 	//1. Based on ‘disp_position’, load the digit to send to a local variable
 	uint8_t digit;
 	digit = disp_characters[disp_position];
+	
 	
 	PORTD |= (1 << PORTD4) | (1 << PORTD5) |(1 << PORTD6) |(1 << PORTD7);
 	//2. Send this bit pattern to the shift-register as in Q2.2

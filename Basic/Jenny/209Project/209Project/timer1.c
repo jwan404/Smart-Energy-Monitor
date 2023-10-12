@@ -9,8 +9,10 @@
 
 #include "timer1.h"
 #include "adc.h"  // Include the ADC module header if needed
+#include "globals.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
 
 void timer1_init() {
 	// Configure Timer1 for CTC (Clear Timer on Compare Match) mode
@@ -19,8 +21,70 @@ void timer1_init() {
 	// Set the prescaler to 256
 	TCCR1B |= (1 << CS12);
 
-	// Set the value for 0.02ms (50 kHz) interval (adjust as needed)
-	OCR1A = 100;  // 2000000 / (256 * 50k) = 156.25, so OCR1A = 156 - 1
+	// Set the value for 2ms interval
+	OCR1A = 14; 
+
 	// Enable Timer1 Compare Match A interrupt
 	TIMSK1 |= (1 << OCIE1A);
 }
+
+ISR(TIMER1_COMPA_vect) {
+	// This code will be executed every 0.002ms
+
+	// Variables for ADC results
+	uint16_t adc_result_ch0;
+	uint16_t adc_result_ch1;
+
+	// Variables for calculations
+	uint16_t Vac[NUM_SAMPLES];
+	uint16_t IL[NUM_SAMPLES];
+	uint16_t sum = 0;
+	uint16_t sum_I = 0;
+
+	for (int i = 0; i < NUM_SAMPLES; i++)
+	{
+		
+		uint16_t adc_result_ch0 = adc_read_channel_single_conversion(0);
+		uint16_t adc_result_ch1 = adc_read_channel_single_conversion(1);
+		
+		//Convert adc to mv
+		uint16_t voltage_0_mv = adc_convert_mv(adc_result_ch0);
+		uint16_t voltage_1_mv = adc_convert_mv(adc_result_ch1);
+
+		// Calculate voltage for each channel
+		uint16_t voltage_ch0 = (adc_result_ch0 * 1000) * Vref / 1024.0;
+		uint16_t voltage_ch1 = (adc_result_ch1 * 1000) * Vref / 1024.0;
+
+		// Calculate Vac for the i-th sample
+		Vac[i] = (voltage_ch0) / ((1/23) * 1.12)/*(Gvs * Gvo)*/;
+		IL[i] =  (((voltage_ch1) / 0.5 * 2.2)/*(Gis * Gio)*/ / 0.5);
+		
+	}
+	
+	// Calculate Vrms and Irms
+	for (uint8_t i = 0; i < NUM_SAMPLES; i++) {
+		sum += Vac[i] * Vac[i];
+		sum_I += IL[i] * IL[i];
+	}
+
+	uint16_t Vrms = calculateVrms(Vac, NUM_SAMPLES);
+	uint16_t Irms = calculateIrms(IL, NUM_SAMPLES);
+	uint16_t Ipk = calculateIpk(Irms);
+	uint16_t power = calculatePower(Vrms, Irms);
+	uint16_t energy = calculateEnergy(power, 0.002); // Modify the time as needed
+
+	// Load Vrms value into the display buffer
+	separate_and_load_characters((uint16_t)(Vrms * 100), 2);
+	separate_and_load_characters((uint16_t)(Ipk * 100), 2);
+
+	// Transmit Vrms, Ipk, power, and energy through UART
+	trans_float(Vrms);
+	trans_float(Ipk);
+	trans_float(power);
+	trans_float(energy);
+
+	// Send the characters to the display
+	send_next_character_to_display();
+}
+
+
