@@ -10,6 +10,8 @@
 #define ENERGYCALCULATIONS_H_
 #include <stdint.h>
 
+
+
 uint16_t calculateVrms(uint16_t* samples, uint8_t numSamples);
 uint16_t calculateIrms(uint16_t* samples, uint8_t numSamples);
 uint16_t calculateIpk(uint16_t Irms);

@@ -10,6 +10,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+
+
 uint16_t calculateVrms(uint16_t* samples, uint8_t numSamples) {
 	uint32_t sum = 0;
 

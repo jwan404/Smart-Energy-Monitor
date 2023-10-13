@@ -19,7 +19,7 @@ void timer0_init() {
 	OCR0A = 195;
 }
 
-ISR(TIMER0_COMPA_vect) {
+/*ISR(TIMER0_COMPA_vect) {
 	send_next_character_to_display();
-}
+}*/
 

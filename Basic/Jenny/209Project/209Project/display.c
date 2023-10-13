@@ -19,11 +19,11 @@ void init_display(void){
 	//TODO: Finish this function
 	//Configure DDR bits of the I/O pins connected to the display
 	// Configure shift register control pins as outputs
+	//SHCP = 3 SHST = 5 SHDS = 4
 	DDRC |= (1 << PORTC3) | (1 << PORTC4) | (1 << PORTC5);
 	//Ds 1, Ds 2, Ds 3, Ds 4
-	
 	DDRD |= (1 << PORTD4) | (1 << PORTD5) | (1 << PORTD6) | (1 << PORTD7);
-	//SHCP = 3 SHST = 5 SHDS = 4
+	
 }
 
 //Populate the array ‘disp_characters[]’ by separating the four digits of ‘number’
