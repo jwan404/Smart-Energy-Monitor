@@ -70,7 +70,7 @@ ISR(TIMER1_COMPA_vect) {
 			Vac[i] = (voltage_ch0) / ((1/23) * 1.12)/*(Gvs * Gvo)*/;
 			channel = 1;
 		} 
-		else if (channel == 1)
+		else
 		{
 		 adc_result_ch1 = adc_read_channel_single_conversion(channel);
 		//Convert adc to mv
