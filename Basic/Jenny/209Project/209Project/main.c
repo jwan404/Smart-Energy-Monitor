@@ -35,6 +35,9 @@ int main(void)
 	timer1_init();
 	init_display();
 	
+	// Enable Timer1 Compare Match A interrupt
+	TIMSK1 |= (1 << OCIE1A);
+	
 	sei();
     /* Replace with your application code */
     while (1) 

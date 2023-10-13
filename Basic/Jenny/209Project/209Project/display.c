@@ -6,7 +6,6 @@
  */ 
 #include "display.h"
 #include <avr/io.h>
-#include <avr/interrupt.h>
 
 const uint8_t seg_pattern[10]={0b00111111, 0b00000110, 0b01011011, 0b01001111, 0b01100110, 0b01101101, 0b01111101, 0b00000111, 0b01111111, 0b011011111};
 
@@ -60,7 +59,6 @@ void send_next_character_to_display(void){
 	//1. Based on ‘disp_position’, load the digit to send to a local variable
 	uint8_t digit;
 	digit = disp_characters[disp_position];
-	
 	
 	PORTD |= (1 << PORTD4) | (1 << PORTD5) |(1 << PORTD6) |(1 << PORTD7);
 	//2. Send this bit pattern to the shift-register as in Q2.2

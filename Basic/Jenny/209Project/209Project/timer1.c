@@ -16,6 +16,7 @@
 #include <avr/interrupt.h>
 
 float Vref = 2.1;
+uint16_t channel = 0;
 
 void timer1_init() {
 	// Configure Timer1 for CTC (Clear Timer on Compare Match) mode
@@ -25,10 +26,15 @@ void timer1_init() {
 	TCCR1B |= (1 << CS12);
 
 	// Set the value for 2ms interval
-	OCR1A = 14; 
+	OCR1A = 14;
 
 	// Enable Timer1 Compare Match A interrupt
 	TIMSK1 |= (1 << OCIE1A);
+	
+	EICRA |= (1 << ISC01) | (1 << ISC00); // Rising edge trigger
+
+	// Enable INT0 external interrupt
+	EIMSK |= (1 << INT0);
 }
 
 ISR(TIMER1_COMPA_vect) {
@@ -46,9 +52,16 @@ ISR(TIMER1_COMPA_vect) {
 
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
-		
-		 adc_result_ch0 = adc_read_channel_single_conversion(0);
-		 adc_result_ch1 = adc_read_channel_single_conversion(1);
+		if (channel == 0)
+		{
+			adc_result_ch0 = adc_read_channel_single_conversion(channel);
+			channel = 1;
+		} 
+		else if (channel == 1)
+		{
+		 adc_result_ch1 = adc_read_channel_single_conversion(channel);
+		 channel = 0;
+		}
 		
 		//Convert adc to mv
 		uint16_t voltage_0_mv = adc_convert_mv(adc_result_ch0);
@@ -77,17 +90,24 @@ ISR(TIMER1_COMPA_vect) {
 	uint16_t energy = calculateEnergy(power, 0.002); // Modify the time as needed
 
 	// Load Vrms value into the display buffer
-	separate_and_load_characters((uint16_t)(Vrms * 100), 2);
-	separate_and_load_characters((uint16_t)(Ipk * 100), 2);
+	//separate_and_load_characters((uint16_t)(Vrms * 100), 1);
+	separate_and_load_characters(1456, 1);
+	//separate_and_load_characters((uint16_t)(Ipk * 100), 1);
 
-	// Transmit Vrms, Ipk, power, and energy through UART
+/*	// Transmit Vrms, Ipk, power, and energy through UART
 	trans_float(Vrms);
 	trans_float(Ipk);
 	trans_float(power);
-	trans_float(energy);
+	trans_float(energy); */
 
 	// Send the characters to the display
 	send_next_character_to_display();
+}
+
+ISR	(INT0_vect){
+	TCCR1B |= (1 << CS12);  // Start Timer1 with a prescaler of 256
+
+	
 }
 
 
