@@ -105,6 +105,7 @@ ISR(ADC_vect) {
 	uint16_t Vrms = sqrt(sum / NUM_SAMPLES);
 	separate_and_load_characters((uint16_t)(Vrms * 100), 1);
 	send_next_character_to_display();
+	
 	_delay_ms(1000);
 	
 	//separate_and_load_characters(1456, 1);
