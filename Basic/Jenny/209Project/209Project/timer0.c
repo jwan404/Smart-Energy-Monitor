@@ -4,6 +4,7 @@
  * Created: 10/10/2023 6:07:47 pm
  *  Author: Jenny W
  */ 
+#include "cpu.h"
 #include "timer0.h"
 #include "display.h"
 
@@ -19,7 +20,4 @@ void timer0_init() {
 	OCR0A = 195;
 }
 
-/*ISR(TIMER0_COMPA_vect) {
-	send_next_character_to_display();
-}*/
 

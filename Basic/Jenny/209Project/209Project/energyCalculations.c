@@ -5,6 +5,7 @@
  *  Author: Jenny W
  */ 
 // energyCalculations.c
+#include "cpu.h"
 #include "energyCalculations.h"
 #include <math.h>
 #include <stdint.h>
