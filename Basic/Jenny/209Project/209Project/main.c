@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 volatile uint16_t Vac[NUM_SAMPLES] = {};
 volatile uint16_t IL[NUM_SAMPLES] = {};
@@ -39,7 +40,8 @@ int main(void)
     /* Replace with your application code */
     while (1) 
     {
-	
+		send_next_character_to_display(); // Call this function to update the display
+		_delay_ms(500); // Adjust this delay to control the display update rate
 		  
 	 }
 	  
