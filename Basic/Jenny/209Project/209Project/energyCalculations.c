@@ -7,11 +7,13 @@
 // energyCalculations.c
 #include "cpu.h"
 #include "energyCalculations.h"
+#include "adc.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 
-
+uint16_t Vac[NUM_SAMPLES];
+uint16_t IL[NUM_SAMPLES];
 
 uint16_t calculateVrms(uint16_t* samples, uint8_t numSamples) {
 	uint32_t sum = 0;

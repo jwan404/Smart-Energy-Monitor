@@ -29,8 +29,8 @@ volatile float power;
 // Variables for ADC results
 volatile float adc_result;
 // Variables for calculations
-volatile uint16_t Vac[NUM_SAMPLES];
-volatile uint16_t IL[NUM_SAMPLES];
+uint16_t Vac[NUM_SAMPLES];
+uint16_t IL[NUM_SAMPLES];
  volatile float sum;
  volatile float sum_I;
  volatile float voltage_mv;
@@ -67,11 +67,7 @@ int main(void)
 	sprintf(voltage_char, "RMS Voltage is: %d.%d%d\n\r", (uint16_t) (localVrms / 100), (uint16_t) (localVrms / 10.0) % 10, (uint16_t) (localVrms % 10));
 	sprintf(current_char, "Peak Current is: %d mA\n\r", (uint16_t) localIpk);
 	sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint16_t)(localPower / 100), (uint16_t) (localPower / 10.0) % 10, (uint16_t) (localPower % 10));
- 	
-// 	sprintf(voltage_char, "RMS Voltage is: %d.%d%d\n\r", (Vrms / 100),  (Vrms / 10) % 10,  (Vrms % 10));
-// 	sprintf(current_char, "Peak Current is: %d mA\n\r", Ipk);
-// 	sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (power / 100), (power / 10) % 10,  (power % 10));
-// 	
+ 	 	
 	// Initialize Timer0 for 10ms interrupt intervals
 	TIMSK0 |= (1 << OCIE0A); // Enable Timer0 overflow interrupt
 

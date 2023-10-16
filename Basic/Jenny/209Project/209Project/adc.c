@@ -24,8 +24,8 @@ extern volatile float power;
 // Variables for ADC results
 extern volatile float adc_result;
 // Variables for calculations
-extern volatile uint16_t Vac[NUM_SAMPLES];
-extern volatile uint16_t IL[NUM_SAMPLES];
+extern uint16_t Vac[NUM_SAMPLES];
+extern uint16_t IL[NUM_SAMPLES];
 extern volatile float sum;
 extern volatile float sum_I;
 
@@ -76,15 +76,15 @@ ISR(ADC_vect) {
 	}
 
 	// Calculate Vrms and Irms
-	for (uint8_t k = 0; k < NUM_SAMPLES; k++) {
-		sum += Vac[k] * Vac[k];
-		sum_I += IL[k] * IL[k];
-	}
+// 	for (uint8_t k = 0; k < NUM_SAMPLES; k++) {
+// 		sum += Vac[k] * Vac[k];
+// 		sum_I += IL[k] * IL[k];
+// 	}
 	
 // 	Load Vrms value into the display buffer
- 		Vrms = sqrt(sum / NUM_SAMPLES);
+ 		Vrms = calculateVrms(Vac, NUM_SAMPLES);
 
- 		float Irms = sqrt(sum_I / NUM_SAMPLES);
+ 		float Irms = calculateIrms(IL, NUM_SAMPLES);
  		Ipk = calculateIpk(Irms);
 		 	
  		power = calculatePower(Vrms, Irms);
