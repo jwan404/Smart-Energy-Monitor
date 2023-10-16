@@ -108,6 +108,8 @@ int main(void)
 		separate_and_load_characters((uint16_t)(localPower), 1);
 		trans_array(power_char);
 	 	_delay_ms(100);
+		 
+		 _delay_ms(1000);
 
 		sum = 0;
 		sum_I = 0;
