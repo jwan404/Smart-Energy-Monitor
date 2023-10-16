@@ -12,8 +12,8 @@
 
 
 
-uint16_t calculateVrms(uint16_t* samples, uint8_t numSamples);
-uint16_t calculateIrms(uint16_t* samples, uint8_t numSamples);
+// uint16_t calculateVrms(uint16_t* samples, uint8_t numSamples);
+// uint16_t calculateIrms(uint16_t* samples, uint8_t numSamples);
 float calculateIpk(float Irms);
 float calculatePower(float Vrms, float Irms);
 

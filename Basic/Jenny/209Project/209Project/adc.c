@@ -69,14 +69,11 @@ ISR(ADC_vect) {
 	
 	for (uint8_t i = 0; i < NUM_SAMPLES; i++) {
 		adc0_result[i] = adc_read_channel_single_conversion(0);
-// 		voltage_mv = adc_convert_mv(adc_result);
-// 		Vac[i] = ((voltage_mv ) * 23);
 
 	}
 	for (uint8_t j = 0; j < NUM_SAMPLES; j++) {
 		adc1_result[j] = adc_read_channel_single_conversion(1);
-// 		voltage_mv = adc_convert_mv(adc_result);
-// 		IL[j] = ((voltage_mv ) / 1.12);
+
 	}
 
 	

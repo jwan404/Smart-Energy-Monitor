@@ -49,6 +49,9 @@ void separate_and_load_characters(uint16_t number, uint8_t decimal_pos){
 	//if statement for decimal point.
 	if (decimal_pos == 1) {
 		disp_characters[1] |= (1 << 7); // Set the decimal point bit
+	} else if (decimal_pos == 2)
+	{
+		disp_characters[2] |= (1 << 7);
 	}
 }
 

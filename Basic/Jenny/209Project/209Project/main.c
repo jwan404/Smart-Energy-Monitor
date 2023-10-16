@@ -46,11 +46,10 @@ int main(void)
 	timer0_init();
 	timer1_init();
 	
-	
-	
 	// Create character array for each parameter
 	char voltage_char[50];
 	char current_char[50];
+	char rmsCurrent_char[50];
 	char power_char[50];
 	
 	 	
@@ -66,8 +65,8 @@ int main(void)
 		//Do conversion
 		for (uint8_t i = 0; i < NUM_SAMPLES; i++)
 		{
-			Vac[i] = (adc_convert_mv(adc0_result[i]) * 23);
-			IL[i] = (adc_convert_mv(adc1_result[i])/ 1.12);
+			Vac[i] = (adc_convert_mv((adc0_result[i]) * 20.5) * 1.05);
+			IL[i] = (adc_convert_mv((adc1_result[i])/ 1.1));
 		}
 		
 		// Calculate Vrms and Irms
@@ -81,6 +80,7 @@ int main(void)
 		uint16_t localVrms = Vrms;
 		
 		float Irms = sqrt(sum_I / NUM_SAMPLES);
+		uint16_t localIrms = Irms;
 		Ipk = calculateIpk(Irms);
 		uint16_t localIpk = Ipk;
 		
@@ -90,29 +90,29 @@ int main(void)
 		// Stores information inside of character array
 		sprintf(voltage_char, "RMS Voltage is: %d%d.%d\n\r", (uint16_t) (localVrms / 100), (uint16_t) (localVrms / 10.0) % 10, (uint16_t) (localVrms % 10));
 		sprintf(current_char, "Peak Current is: %d mA\n\r", (uint16_t) localIpk);
+		sprintf(rmsCurrent_char, "RMS Current is: %d mA\n\r",(uint16_t) localIrms);
 		sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint16_t)(localPower / 100), (uint16_t) (localPower / 10.0) % 10, (uint16_t) (localPower % 10));
 		
 		// Transmit array to terminal.
 		trans_array(voltage_char);
-		trans_array(current_char);
-		trans_array(power_char);
-		
-		// Delay by 1 second
-		_delay_ms(100);	
-			
 		//Load Vrms value into the display buffer
-	 	separate_and_load_characters((uint16_t)(localVrms), 1);
-	 		
-	 	_delay_ms(10);
-	 		
-	 	//uint16_t Irms = sqrt(local_sum_I / NUM_SAMPLES);
-	 	separate_and_load_characters((uint16_t)(localIpk), 0);
-	 				
-	 	_delay_ms(10);
-	 				
-	 	separate_and_load_characters((uint16_t)(localPower), 1);
-		 
+		separate_and_load_characters((uint16_t)(localVrms), 2);
+		_delay_ms(100);
+
+		trans_array(current_char);
+		trans_array(rmsCurrent_char);
+		//uint16_t Irms = sqrt(local_sum_I / NUM_SAMPLES);
+		separate_and_load_characters((uint16_t)(localIpk), 0);
+		_delay_ms(100);
+		
+		separate_and_load_characters((uint16_t)(localPower), 1);
+		trans_array(power_char);
+	 	_delay_ms(100);
+
+		sum = 0;
+		sum_I = 0;
 	 }
+	 
 	  
 }
 
