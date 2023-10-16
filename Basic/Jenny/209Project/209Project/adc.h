@@ -15,19 +15,7 @@ void adc_init();
 float adc_read_channel_single_conversion(uint8_t channel);
 float adc_convert_mv(float raw_adc_value);
 
-extern float Vref;
-extern volatile float Vrms;
-extern volatile float Ipk;
-extern volatile float power;
-// Variables for ADC results
-extern volatile float adc_result;
-// Variables for calculations
-extern uint16_t Vac[NUM_SAMPLES];
-extern uint16_t IL[NUM_SAMPLES];
-extern volatile float sum;
-extern volatile float sum_I;
 
-extern volatile float voltage_mv;
 
 
 

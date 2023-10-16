@@ -30,7 +30,9 @@ volatile float power;
 volatile float adc_result;
 // Variables for calculations
 uint16_t Vac[NUM_SAMPLES];
+extern volatile uint16_t adc0_result[NUM_SAMPLES];
 uint16_t IL[NUM_SAMPLES];
+extern volatile uint16_t adc1_result[NUM_SAMPLES];
  volatile float sum;
  volatile float sum_I;
  volatile float voltage_mv;
@@ -44,30 +46,14 @@ int main(void)
 	timer0_init();
 	timer1_init();
 	
-	DDRB |= (1 << PINB5);
 	
-	// Access Vrms and Ipk
-	uint16_t localVrms = Vrms;
-	uint16_t localIpk = Ipk;
-	uint16_t localPower = power;
-	
-	// Variables for ADC results
-//	uint16_t local_adc_result = adc_result;
-	
-	// Variables for calculations
-	//uint16_t local_sum = sum;
-	//uint16_t local_sum_I = sum_I;
 	
 	// Create character array for each parameter
 	char voltage_char[50];
 	char current_char[50];
 	char power_char[50];
 	
-	// Stores information inside of character array
-	sprintf(voltage_char, "RMS Voltage is: %d.%d%d\n\r", (uint16_t) (localVrms / 100), (uint16_t) (localVrms / 10.0) % 10, (uint16_t) (localVrms % 10));
-	sprintf(current_char, "Peak Current is: %d mA\n\r", (uint16_t) localIpk);
-	sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint16_t)(localPower / 100), (uint16_t) (localPower / 10.0) % 10, (uint16_t) (localPower % 10));
- 	 	
+	 	
 	// Initialize Timer0 for 10ms interrupt intervals
 	TIMSK0 |= (1 << OCIE0A); // Enable Timer0 overflow interrupt
 
@@ -76,6 +62,36 @@ int main(void)
     /* Replace with your application code */
     while (1) 
     {
+		
+		//Do conversion
+		for (uint8_t i = 0; i < NUM_SAMPLES; i++)
+		{
+			Vac[i] = (adc_convert_mv(adc0_result[i]) * 23);
+			IL[i] = (adc_convert_mv(adc1_result[i])/ 1.12);
+		}
+		
+		// Calculate Vrms and Irms
+		 	for (uint8_t k = 0; k < NUM_SAMPLES; k++) {
+		 		sum += Vac[k] * Vac[k];
+		 		sum_I += IL[k] * IL[k];
+			}
+		
+		// 	Load Vrms value into the display buffer
+		Vrms = sqrt(sum / NUM_SAMPLES);
+		uint16_t localVrms = Vrms;
+		
+		float Irms = sqrt(sum_I / NUM_SAMPLES);
+		Ipk = calculateIpk(Irms);
+		uint16_t localIpk = Ipk;
+		
+		power = calculatePower(Vrms, Irms);
+		uint16_t localPower = power / 100;
+		
+		// Stores information inside of character array
+		sprintf(voltage_char, "RMS Voltage is: %d.%d%d\n\r", (uint16_t) (localVrms / 100), (uint16_t) (localVrms / 10.0) % 10, (uint16_t) (localVrms % 10));
+		sprintf(current_char, "Peak Current is: %d mA\n\r", (uint16_t) localIpk);
+		sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint16_t)(localPower / 100), (uint16_t) (localPower / 10.0) % 10, (uint16_t) (localPower % 10));
+		
 		// Transmit array to terminal.
 		trans_array(voltage_char);
 		trans_array(current_char);

@@ -31,6 +31,10 @@ extern volatile float sum_I;
 
 extern volatile float voltage_mv;
 
+volatile uint16_t adc0_result[NUM_SAMPLES];
+volatile uint16_t adc1_result[NUM_SAMPLES];
+
+
 void adc_init() {
 	// setting Vcc
 	ADMUX |= (1 << REFS0);
@@ -64,30 +68,18 @@ ISR(ADC_vect) {
 	// Variables to track the current channel
 	
 	for (uint8_t i = 0; i < NUM_SAMPLES; i++) {
-		adc_result = adc_read_channel_single_conversion(0);
-		voltage_mv = adc_convert_mv(adc_result);
-		Vac[i] = ((voltage_mv ) * 23);
+		adc0_result[i] = adc_read_channel_single_conversion(0);
+// 		voltage_mv = adc_convert_mv(adc_result);
+// 		Vac[i] = ((voltage_mv ) * 23);
 
 	}
 	for (uint8_t j = 0; j < NUM_SAMPLES; j++) {
-		adc_result = adc_read_channel_single_conversion(1);
-		voltage_mv = adc_convert_mv(adc_result);
-		IL[j] = ((voltage_mv ) / 1.12);
+		adc1_result[j] = adc_read_channel_single_conversion(1);
+// 		voltage_mv = adc_convert_mv(adc_result);
+// 		IL[j] = ((voltage_mv ) / 1.12);
 	}
 
-	// Calculate Vrms and Irms
-// 	for (uint8_t k = 0; k < NUM_SAMPLES; k++) {
-// 		sum += Vac[k] * Vac[k];
-// 		sum_I += IL[k] * IL[k];
-// 	}
 	
-// 	Load Vrms value into the display buffer
- 		Vrms = calculateVrms(Vac, NUM_SAMPLES);
-
- 		float Irms = calculateIrms(IL, NUM_SAMPLES);
- 		Ipk = calculateIpk(Irms);
-		 	
- 		power = calculatePower(Vrms, Irms);
 
 
 	//clearing compare match
