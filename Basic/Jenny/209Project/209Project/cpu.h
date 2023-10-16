@@ -13,17 +13,17 @@
 #define NUM_SAMPLES 50
 
 extern float Vref;
-extern volatile uint16_t Vrms;
-extern volatile uint16_t Ipk;
-extern volatile uint16_t power;
+extern volatile float Vrms;
+extern volatile float Ipk;
+extern volatile float power;
 // Variables for ADC results
-extern volatile uint16_t adc_result;
+extern volatile float adc_result;
 // Variables for calculations
 extern volatile uint16_t Vac[NUM_SAMPLES];
 extern volatile uint16_t IL[NUM_SAMPLES];
-extern volatile uint16_t sum;
-extern volatile uint16_t sum_I;
+extern volatile float sum;
+extern volatile float sum_I;
 
-extern volatile uint16_t voltage_mv;
+extern volatile float voltage_mv;
 
 #endif /* CPU_H_ */

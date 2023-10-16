@@ -32,10 +32,12 @@ int main(void)
 	timer0_init();
 	timer1_init();
 	
+	DDRB |= (1 << PINB5);
+	
 	// Access Vrms and Ipk
-	uint16_t localVrms = Vrms * 100;
-	uint16_t localIpk = Ipk;
-	uint16_t localPower = power;
+	uint16_t localVrms = 14.56 * 100;
+	uint16_t localIpk = 200;
+	uint16_t localPower = 13.29 * 100;
 	
 	// Variables for ADC results
 //	uint16_t local_adc_result = adc_result;
@@ -72,12 +74,12 @@ int main(void)
 		// Load Vrms value into the display buffer
 		separate_and_load_characters((uint16_t)(localVrms), 1);
 
-		_delay_ms(1000);
+		_delay_ms(100);
 
 		//uint16_t Irms = sqrt(local_sum_I / NUM_SAMPLES);
 		separate_and_load_characters((uint16_t)(localIpk), 0);
 		
-		_delay_ms(1000);
+		_delay_ms(100);
 		
 		separate_and_load_characters((uint16_t)(localPower), 1);
 	 }

@@ -33,11 +33,11 @@ uint16_t calculateIrms(uint16_t* samples, uint8_t numSamples) {
 	return sqrt(sum / numSamples);
 }
 
-uint16_t calculateIpk(uint16_t Irms) {
+float calculateIpk(float Irms) {
 	return Irms * sqrt(2);
 }
 
-uint16_t calculatePower(uint16_t Vrms, uint16_t Irms) {
+float calculatePower(float Vrms, float Irms) {
 	return Vrms * Irms;
 }
 

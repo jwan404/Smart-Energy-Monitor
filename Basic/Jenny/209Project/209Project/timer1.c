@@ -19,7 +19,7 @@ uint16_t channel = 0;
 
 void timer1_init() {
 	// Configure Timer1 for CTC (Clear Timer on Compare Match) mode
-	TCCR1B |= (1 << WGM12);
+	TCCR1B |= (1 << WGM12) | (1 << CS10);
 
 	// Set the value for 0.1ms interval
 	OCR1A = 199;

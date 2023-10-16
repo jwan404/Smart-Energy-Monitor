@@ -18,88 +18,80 @@
 #include <util/delay.h>
 
 float Vref = 2.1;
-volatile	uint16_t Vrms = 0;
-volatile	uint16_t Ipk = 0;
-volatile	uint16_t power = 0;
+volatile	float Vrms;
+volatile	float Ipk;
+volatile	float power;
 	// Variables for ADC results
-volatile	uint16_t adc_result;
+volatile	float adc_result;
 	
 	// Variables for calculations
 volatile	uint16_t Vac[NUM_SAMPLES];
 volatile	uint16_t IL[NUM_SAMPLES];
-volatile	uint16_t sum = 0;
-volatile	uint16_t sum_I = 0;
+volatile	float sum;
+volatile	float sum_I;
 
- volatile uint16_t voltage_mv = 0;
+ volatile float voltage_mv;
 
 void adc_init() {
-	ADMUX |= (1 << REFS0) ;
-	ADCSRA = 0b11001100; //16 prescaler
-	ADCSRB = 0b01000101; //ts2 0
+	// setting Vcc
+	ADMUX |= (1 << REFS0);
+	// enabling adc and autotriggering with prescaler of 8
+	ADCSRA |= (1 << ADEN) | (1 << ADPS1) | (1 << ADPS0) | (1 << ADATE) | (1 << ADIE);
+	ADCSRB |= (1 << ADTS1) | (1 << ADTS0);
 }
 
 uint16_t adc_read_channel_single_conversion(uint8_t channel) {
 	ADMUX &= 0xF0; //Clear channel selection
-	//ADMUX |= channel; //Set the channel to convert
 	ADMUX |= channel;
-	ADCSRA |= (1 << ADSC); //Starting an ADC conversion
-	while ((ADCSRA & (1 << ADIF)) == 0) { //ADIF bit is checked to see if it is 0
-		; //If ADIF bit is not 1, wait until it becomes 1
-	}
+	
 	return ADC; //Alternatively you can write return ADC;
 }
 
 // Function to convert raw ADC count to millivolts (mV)
-uint16_t adc_convert_mv(uint16_t raw_adc_value) {
+float adc_convert_mv(float raw_adc_value) {
 
 	// Calculate the voltage resolution in millivolts (mV) per ADC count
-	float voltage_resolution_mV = Vref / 1024.0;  // 10-bit ADC
+	float voltage_resolution_mV = 5000 / 1024.0;  // 10-bit ADC
 
 	// Calculate the voltage value in millivolts (mV) from the raw ADC count
-	uint16_t voltage_mV = (uint16_t)(raw_adc_value * voltage_resolution_mV);
+	float voltage_mV = (float)(raw_adc_value * voltage_resolution_mV - 2100);
 
 	return voltage_mV;
 }
 
 ISR(ADC_vect) {
 	// This code will be executed every 0.1ms
-	
+
 	// Variables to track the current channel
-	static uint8_t channel = 0;
+	
+	for (uint8_t i = 0; i < NUM_SAMPLES; i++) {
+		adc_result = adc_read_channel_single_conversion(0);
+		voltage_mv = adc_convert_mv(adc_result);
+		Vac[i] = ((voltage_mv ) * 23)/1000;
 
-	for (int i = 0; i < NUM_SAMPLES; i++) {
-		// Read from the current channel
-		adc_result = adc_read_channel_single_conversion(channel);
-
-		// Convert adc to mV
-		 voltage_mv = adc_convert_mv(adc_result);
-
-		// Calculate Vac or IL for the i-th sample based on the channel
-		if (channel == 0) {
-
-			// Calculate Vac
-			Vac[i] = (voltage_mv ) / ((1/23) * 1.12);
-			} else {
-			// Calculate IL
-			IL[i] = ((voltage_mv ) / (0.5 * 2.2)) / 0.5;
-		}
-
-		// Switch to the other channel
-		channel = (channel == 0) ? 1 : 0;
 	}
+	for (uint8_t j = 0; j < NUM_SAMPLES; j++) {
+		adc_result = adc_read_channel_single_conversion(1);
+		voltage_mv = adc_convert_mv(adc_result);
+		IL[j] = ((voltage_mv ) / 1.12)/1000;
+	}
+	
 
 	// Calculate Vrms and Irms
-	for (uint8_t i = 0; i < NUM_SAMPLES; i++) {
-		sum += Vac[i] * Vac[i];
-		sum_I += IL[i] * IL[i];
+	for (uint8_t k = 0; k < NUM_SAMPLES; k++) {
+		sum += Vac[k] * Vac[k];
+		sum_I += IL[k] * IL[k];
 	}
+	
 // 	Load Vrms value into the display buffer
  		Vrms = sqrt(sum / NUM_SAMPLES);
 
- 		uint16_t Irms = sqrt(sum_I / NUM_SAMPLES);
+ 		float Irms = sqrt(sum_I / NUM_SAMPLES);
  		Ipk = calculateIpk(Irms);
 		 	
  		power = calculatePower(Vrms, Irms);
 
 
+	//clearing compare match
+	TIFR0 |= (1 << OCF0A);
 }	
