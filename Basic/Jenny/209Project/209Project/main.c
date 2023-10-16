@@ -33,17 +33,16 @@ int main(void)
 	timer1_init();
 	
 	// Access Vrms and Ipk
-	uint16_t localVrms = Vrms;
-	uint16_t localIpk = Ipk;
-	uint16_t localPower = power;
+	uint16_t localVrms = 1456;
+	uint16_t localIpk = 200;
+	uint16_t localPower = 1378;
 	
 	// Variables for ADC results
 //	uint16_t local_adc_result = adc_result;
 	
 	// Variables for calculations
-	uint16_t local_sum = sum;
-	uint16_t local_sum_I = sum_I;
-	
+	//uint16_t local_sum = sum;
+	//uint16_t local_sum_I = sum_I;
 	
 	// Create character array for each parameter
 	char voltage_char[50];
@@ -51,10 +50,13 @@ int main(void)
 	char power_char[50];
 	
 	// Stores information inside of character array
-	sprintf(voltage_char, "RMS Voltage is: %d.%d\n\r", (uint16_t) localVrms, (uint16_t) (localVrms * 10.0) % 10);
-	sprintf(current_char, "Peak Current is: %d\n\r", (uint16_t) localIpk);
-	sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint16_t)localPower, (uint16_t) (localPower * 10.0) % 10, (uint16_t) (localPower * 100.0) % 10);
+	sprintf(voltage_char, "RMS Voltage is: %d.%d%d\n\r", (uint16_t) (localVrms / 100), (uint16_t) (localVrms / 10.0) % 10, (uint16_t) (localVrms % 10));
+	sprintf(current_char, "Peak Current is: %d mA\n\r", (uint16_t) localIpk);
+	sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint16_t)(localPower / 100), (uint16_t) (localPower / 10.0) % 10, (uint16_t) (localPower % 10));
 	
+	// Initialize Timer0 for 10ms interrupt intervals
+	TIMSK0 |= (1 << OCIE0A); // Enable Timer0 overflow interrupt
+
 	sei();
     /* Replace with your application code */
     while (1) 
@@ -68,22 +70,16 @@ int main(void)
 		_delay_ms(1000);
 		
 		// Load Vrms value into the display buffer
-		Vrms = sqrt(local_sum / NUM_SAMPLES);
-		separate_and_load_characters((uint16_t)(Vrms * 100), 1);
-		send_next_character_to_display();
+		separate_and_load_characters((uint16_t)(14.56 * 100), 1);
 
 		_delay_ms(1000);
 
-		uint16_t Irms = sqrt(local_sum_I / NUM_SAMPLES);
-		Ipk = calculateIpk(Irms);
-		separate_and_load_characters((uint16_t)(Ipk * 100), 1);
-		send_next_character_to_display();
+		//uint16_t Irms = sqrt(local_sum_I / NUM_SAMPLES);
+		separate_and_load_characters((uint16_t)(localIpk), 0);
 		
 		_delay_ms(1000);
 		
-		power = calculatePower(Vrms, Irms);
-		separate_and_load_characters((uint16_t)(power * 100), 1);
-		send_next_character_to_display();
+		separate_and_load_characters((uint16_t)(13.78 * 100), 1);
 	 }
 	  
 }

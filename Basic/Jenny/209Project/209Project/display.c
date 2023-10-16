@@ -47,8 +47,8 @@ void separate_and_load_characters(uint16_t number, uint8_t decimal_pos){
 	disp_characters[3] = seg_pattern[disp_characters[3]];
 	
 	//if statement for decimal point.
-	if (decimal_pos == disp_position) {
-		disp_characters[disp_position] |= (1 << 7); // Set the decimal point bit
+	if (decimal_pos == 1) {
+		disp_characters[1] |= (1 << 7); // Set the decimal point bit
 	}
 }
 

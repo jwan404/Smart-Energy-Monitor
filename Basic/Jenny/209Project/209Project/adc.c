@@ -31,10 +31,9 @@ float Vref = 2.1;
 	uint16_t sum_I = 0;
 
 void adc_init() {
-	ADMUX = 0b01000010;
-	ADCSRA = 0b11000100;
-	ADCSRB = 0b00000000;
-	DIDR0 = 0b00000000;
+	ADMUX |= (1 << REFS0) ;
+	ADCSRA = 0b11001100; //16 prescaler
+	ADCSRB = 0b01000101; //ts2 0
 }
 
 uint16_t adc_read_channel_single_conversion(uint8_t channel) {
@@ -75,11 +74,12 @@ ISR(ADC_vect) {
 
 		// Calculate Vac or IL for the i-th sample based on the channel
 		if (channel == 0) {
+
 			// Calculate Vac
-			Vac[i] = (voltage_mv * 1000) / ((1/23) * 1.12);
+			Vac[i] = (voltage_mv ) / ((1/23) * 1.12);
 			} else {
 			// Calculate IL
-			IL[i] = ((voltage_mv * 1000) / (0.5 * 2.2)) / 0.5;
+			IL[i] = ((voltage_mv ) / (0.5 * 2.2)) / 0.5;
 		}
 
 		// Switch to the other channel
@@ -92,20 +92,20 @@ ISR(ADC_vect) {
 		sum_I += IL[i] * IL[i];
 	}
 // 	Load Vrms value into the display buffer
-// 		Vrms = sqrt(sum / NUM_SAMPLES);
+ 		Vrms = sqrt(sum / NUM_SAMPLES);
 // 		separate_and_load_characters((uint16_t)(Vrms * 100), 1);
 // 		send_next_character_to_display();
 // 	
 // 		_delay_ms(100);
 // 	
-// 		uint16_t Irms = sqrt(sum_I / NUM_SAMPLES);
-// 		Ipk = calculateIpk(Irms);
+ 		uint16_t Irms = sqrt(sum_I / NUM_SAMPLES);
+ 		Ipk = calculateIpk(Irms);
 // 		separate_and_load_characters((uint16_t)(Ipk * 100), 1);
 // 		send_next_character_to_display();
 // 		
 // 		_delay_ms(100);
 // 		
-// 		power = calculatePower(Vrms, Irms);
+ 		power = calculatePower(Vrms, Irms);
 // 		separate_and_load_characters((uint16_t)(power * 100), 1);
 // 		send_next_character_to_display();
 

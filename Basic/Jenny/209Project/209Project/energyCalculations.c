@@ -41,6 +41,4 @@ uint16_t calculatePower(uint16_t Vrms, uint16_t Irms) {
 	return Vrms * Irms;
 }
 
-uint16_t calculateEnergy(uint16_t power, uint16_t time) {
-	return power * time;
-}
+

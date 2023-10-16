@@ -17,7 +17,10 @@
 void timer0_init() {
 	TCCR0A = 0b00000010;
 	TCCR0B = 0b00000100;
-	OCR0A = 195;
+	OCR0A = 38;
 }
 
+ISR(TIMER0_COMPA_vect) {
+	send_next_character_to_display();
+}
 
