@@ -17,20 +17,19 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-float Vref = 2.1;
-volatile	float Vrms;
-volatile	float Ipk;
-volatile	float power;
-	// Variables for ADC results
-volatile	float adc_result;
-	
-	// Variables for calculations
-volatile	uint16_t Vac[NUM_SAMPLES];
-volatile	uint16_t IL[NUM_SAMPLES];
-volatile	float sum;
-volatile	float sum_I;
+extern float Vref;
+extern volatile float Vrms;
+extern volatile float Ipk;
+extern volatile float power;
+// Variables for ADC results
+extern volatile float adc_result;
+// Variables for calculations
+extern volatile uint16_t Vac[NUM_SAMPLES];
+extern volatile uint16_t IL[NUM_SAMPLES];
+extern volatile float sum;
+extern volatile float sum_I;
 
- volatile float voltage_mv;
+extern volatile float voltage_mv;
 
 void adc_init() {
 	// setting Vcc
@@ -40,7 +39,7 @@ void adc_init() {
 	ADCSRB |= (1 << ADTS1) | (1 << ADTS0);
 }
 
-uint16_t adc_read_channel_single_conversion(uint8_t channel) {
+float adc_read_channel_single_conversion(uint8_t channel) {
 	ADMUX &= 0xF0; //Clear channel selection
 	ADMUX |= channel;
 	
@@ -67,15 +66,14 @@ ISR(ADC_vect) {
 	for (uint8_t i = 0; i < NUM_SAMPLES; i++) {
 		adc_result = adc_read_channel_single_conversion(0);
 		voltage_mv = adc_convert_mv(adc_result);
-		Vac[i] = ((voltage_mv ) * 23)/1000;
+		Vac[i] = ((voltage_mv ) * 23);
 
 	}
 	for (uint8_t j = 0; j < NUM_SAMPLES; j++) {
 		adc_result = adc_read_channel_single_conversion(1);
 		voltage_mv = adc_convert_mv(adc_result);
-		IL[j] = ((voltage_mv ) / 1.12)/1000;
+		IL[j] = ((voltage_mv ) / 1.12);
 	}
-	
 
 	// Calculate Vrms and Irms
 	for (uint8_t k = 0; k < NUM_SAMPLES; k++) {

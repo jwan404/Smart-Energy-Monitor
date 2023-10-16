@@ -22,6 +22,18 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+float Vref;
+volatile float Vrms;
+volatile float Ipk;
+volatile float power;
+// Variables for ADC results
+volatile float adc_result;
+// Variables for calculations
+volatile uint16_t Vac[NUM_SAMPLES];
+volatile uint16_t IL[NUM_SAMPLES];
+ volatile float sum;
+ volatile float sum_I;
+ volatile float voltage_mv;
 
 
 int main(void)
@@ -35,9 +47,9 @@ int main(void)
 	DDRB |= (1 << PINB5);
 	
 	// Access Vrms and Ipk
-	uint16_t localVrms = 14.56 * 100;
-	uint16_t localIpk = 200;
-	uint16_t localPower = 13.29 * 100;
+	uint16_t localVrms = Vrms;
+	uint16_t localIpk = Ipk;
+	uint16_t localPower = power;
 	
 	// Variables for ADC results
 //	uint16_t local_adc_result = adc_result;
@@ -55,11 +67,16 @@ int main(void)
 	sprintf(voltage_char, "RMS Voltage is: %d.%d%d\n\r", (uint16_t) (localVrms / 100), (uint16_t) (localVrms / 10.0) % 10, (uint16_t) (localVrms % 10));
 	sprintf(current_char, "Peak Current is: %d mA\n\r", (uint16_t) localIpk);
 	sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint16_t)(localPower / 100), (uint16_t) (localPower / 10.0) % 10, (uint16_t) (localPower % 10));
-	
+ 	
+// 	sprintf(voltage_char, "RMS Voltage is: %d.%d%d\n\r", (Vrms / 100),  (Vrms / 10) % 10,  (Vrms % 10));
+// 	sprintf(current_char, "Peak Current is: %d mA\n\r", Ipk);
+// 	sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (power / 100), (power / 10) % 10,  (power % 10));
+// 	
 	// Initialize Timer0 for 10ms interrupt intervals
 	TIMSK0 |= (1 << OCIE0A); // Enable Timer0 overflow interrupt
 
 	sei();
+	
     /* Replace with your application code */
     while (1) 
     {
@@ -69,19 +86,20 @@ int main(void)
 		trans_array(power_char);
 		
 		// Delay by 1 second
-		_delay_ms(1000);
-		
-		// Load Vrms value into the display buffer
-		separate_and_load_characters((uint16_t)(localVrms), 1);
-
-		_delay_ms(100);
-
-		//uint16_t Irms = sqrt(local_sum_I / NUM_SAMPLES);
-		separate_and_load_characters((uint16_t)(localIpk), 0);
-		
-		_delay_ms(100);
-		
-		separate_and_load_characters((uint16_t)(localPower), 1);
+		_delay_ms(100);	
+			
+		//Load Vrms value into the display buffer
+	 	separate_and_load_characters((uint16_t)(localVrms), 1);
+	 		
+	 	_delay_ms(10);
+	 		
+	 	//uint16_t Irms = sqrt(local_sum_I / NUM_SAMPLES);
+	 	separate_and_load_characters((uint16_t)(localIpk), 0);
+	 				
+	 	_delay_ms(10);
+	 				
+	 	separate_and_load_characters((uint16_t)(localPower), 1);
+		 
 	 }
 	  
 }
