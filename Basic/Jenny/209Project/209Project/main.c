@@ -88,7 +88,7 @@ int main(void)
 		uint16_t localPower = power / 100;
 		
 		// Stores information inside of character array
-		sprintf(voltage_char, "RMS Voltage is: %d.%d%d\n\r", (uint16_t) (localVrms / 100), (uint16_t) (localVrms / 10.0) % 10, (uint16_t) (localVrms % 10));
+		sprintf(voltage_char, "RMS Voltage is: %d%d.%d\n\r", (uint16_t) (localVrms / 100), (uint16_t) (localVrms / 10.0) % 10, (uint16_t) (localVrms % 10));
 		sprintf(current_char, "Peak Current is: %d mA\n\r", (uint16_t) localIpk);
 		sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint16_t)(localPower / 100), (uint16_t) (localPower / 10.0) % 10, (uint16_t) (localPower % 10));
 		
