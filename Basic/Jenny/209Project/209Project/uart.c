@@ -9,6 +9,7 @@
 #include "cpu.h"
 #include "uart.h"
 #include <avr/io.h>
+#include <string.h>
 
 void uart_init(uint32_t baud){
 	UCSR0A = 0b00000000;
@@ -28,8 +29,3 @@ void trans_array(char* msg){
 	}
 }
 
-void trans_float(uint16_t value) {
-	char buffer[20];
-	snprintf(buffer, sizeof(buffer), "%f\n", value);
-	trans_array(buffer);
-}

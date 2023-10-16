@@ -33,9 +33,9 @@ int main(void)
 	timer1_init();
 	
 	// Access Vrms and Ipk
-	uint16_t localVrms = 1456;
-	uint16_t localIpk = 200;
-	uint16_t localPower = 1378;
+	uint16_t localVrms = Vrms * 100;
+	uint16_t localIpk = Ipk;
+	uint16_t localPower = power;
 	
 	// Variables for ADC results
 //	uint16_t local_adc_result = adc_result;
@@ -70,7 +70,7 @@ int main(void)
 		_delay_ms(1000);
 		
 		// Load Vrms value into the display buffer
-		separate_and_load_characters((uint16_t)(14.56 * 100), 1);
+		separate_and_load_characters((uint16_t)(localVrms), 1);
 
 		_delay_ms(1000);
 
@@ -79,7 +79,7 @@ int main(void)
 		
 		_delay_ms(1000);
 		
-		separate_and_load_characters((uint16_t)(13.78 * 100), 1);
+		separate_and_load_characters((uint16_t)(localPower), 1);
 	 }
 	  
 }

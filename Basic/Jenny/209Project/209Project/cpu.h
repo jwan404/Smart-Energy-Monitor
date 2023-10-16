@@ -10,18 +10,20 @@
 #define CPU_H_
 #define F_CPU 2000000UL 
 #include <stdint.h>
-#define NUM_SAMPLES 100
+#define NUM_SAMPLES 50
 
 extern float Vref;
-extern uint16_t Vrms;
-extern uint16_t Ipk;
-extern uint16_t power;
+extern volatile uint16_t Vrms;
+extern volatile uint16_t Ipk;
+extern volatile uint16_t power;
 // Variables for ADC results
-extern uint16_t adc_result;
+extern volatile uint16_t adc_result;
 // Variables for calculations
-extern uint16_t Vac[NUM_SAMPLES];
-extern uint16_t IL[NUM_SAMPLES];
-extern uint16_t sum;
-extern uint16_t sum_I;
+extern volatile uint16_t Vac[NUM_SAMPLES];
+extern volatile uint16_t IL[NUM_SAMPLES];
+extern volatile uint16_t sum;
+extern volatile uint16_t sum_I;
+
+extern volatile uint16_t voltage_mv;
 
 #endif /* CPU_H_ */

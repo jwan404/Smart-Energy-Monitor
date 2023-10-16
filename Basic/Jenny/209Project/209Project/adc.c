@@ -18,17 +18,19 @@
 #include <util/delay.h>
 
 float Vref = 2.1;
-	uint16_t Vrms = 0;
-	uint16_t Ipk = 0;
-	uint16_t power = 0;
+volatile	uint16_t Vrms = 0;
+volatile	uint16_t Ipk = 0;
+volatile	uint16_t power = 0;
 	// Variables for ADC results
-	uint16_t adc_result;
+volatile	uint16_t adc_result;
 	
 	// Variables for calculations
-	uint16_t Vac[NUM_SAMPLES];
-	uint16_t IL[NUM_SAMPLES];
-	uint16_t sum = 0;
-	uint16_t sum_I = 0;
+volatile	uint16_t Vac[NUM_SAMPLES];
+volatile	uint16_t IL[NUM_SAMPLES];
+volatile	uint16_t sum = 0;
+volatile	uint16_t sum_I = 0;
+
+ volatile uint16_t voltage_mv = 0;
 
 void adc_init() {
 	ADMUX |= (1 << REFS0) ;
@@ -60,7 +62,7 @@ uint16_t adc_convert_mv(uint16_t raw_adc_value) {
 }
 
 ISR(ADC_vect) {
-	// This code will be executed every 0.002ms
+	// This code will be executed every 0.1ms
 	
 	// Variables to track the current channel
 	static uint8_t channel = 0;
@@ -70,7 +72,7 @@ ISR(ADC_vect) {
 		adc_result = adc_read_channel_single_conversion(channel);
 
 		// Convert adc to mV
-		uint16_t voltage_mv = adc_convert_mv(adc_result);
+		 voltage_mv = adc_convert_mv(adc_result);
 
 		// Calculate Vac or IL for the i-th sample based on the channel
 		if (channel == 0) {
@@ -93,20 +95,11 @@ ISR(ADC_vect) {
 	}
 // 	Load Vrms value into the display buffer
  		Vrms = sqrt(sum / NUM_SAMPLES);
-// 		separate_and_load_characters((uint16_t)(Vrms * 100), 1);
-// 		send_next_character_to_display();
-// 	
-// 		_delay_ms(100);
-// 	
+
  		uint16_t Irms = sqrt(sum_I / NUM_SAMPLES);
  		Ipk = calculateIpk(Irms);
-// 		separate_and_load_characters((uint16_t)(Ipk * 100), 1);
-// 		send_next_character_to_display();
-// 		
-// 		_delay_ms(100);
-// 		
+		 	
  		power = calculatePower(Vrms, Irms);
-// 		separate_and_load_characters((uint16_t)(power * 100), 1);
-// 		send_next_character_to_display();
+
 
 }	
