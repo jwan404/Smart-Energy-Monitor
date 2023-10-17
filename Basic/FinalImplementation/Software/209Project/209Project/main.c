@@ -65,7 +65,7 @@ int main(void)
 		//Do conversion
 		for (uint8_t i = 0; i < NUM_SAMPLES; i++)
 		{
-			Vac[i] = (adc_convert_mv((adc0_result[i]) * 20.5) );
+			Vac[i] = (adc_convert_mv((adc0_result[i]) * 20.5));
 			IL[i] = (adc_convert_mv((adc1_result[i])/ 1.1));
 		}
 		
@@ -105,7 +105,7 @@ int main(void)
 		separate_and_load_characters((uint16_t)(localPower), 1);
 		trans_array(power_char);
 		 
-		 _delay_ms(100);
+		 _delay_ms(1000);
 
 		sum = 0;
 		sum_I = 0;
