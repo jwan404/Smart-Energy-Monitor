@@ -10,7 +10,7 @@
 #define CPU_H_
 #define F_CPU 2000000UL 
 #include <stdint.h>
-#define NUM_SAMPLES 50
+#define NUM_SAMPLES 20
 
 
 

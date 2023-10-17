@@ -21,6 +21,7 @@
 #include <math.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <string.h>
 
 float Vref;
 volatile float Vrms;
@@ -109,7 +110,7 @@ int main(void)
 		sum = 0;
 		sum_I = 0;
 		
-
+		
 	 }
 	 
 	  
