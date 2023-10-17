@@ -88,11 +88,11 @@ static uint8_t currentChannel = 0;
 ISR(ADC_vect) {
 	// Read from the current channel
 	if (currentChannel == 0) {
-		adc0_result[sampleIndex] = ADC;
+		adc0_result[sampleIndex] = adc_read_channel_single_conversion(0);
 		// Switch to the other channel
 		currentChannel = 1;
 		} else {
-		adc1_result[sampleIndex] = ADC;
+		adc1_result[sampleIndex] = adc_read_channel_single_conversion(1);
 		// Switch back to the first channel
 		currentChannel = 0;
 		// Increment the sampleIndex
