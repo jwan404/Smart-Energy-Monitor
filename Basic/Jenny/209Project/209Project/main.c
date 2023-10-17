@@ -49,7 +49,6 @@ int main(void)
 	// Create character array for each parameter
 	char voltage_char[50];
 	char current_char[50];
-	char rmsCurrent_char[50];
 	char power_char[50];
 	
 	 	
@@ -65,7 +64,7 @@ int main(void)
 		//Do conversion
 		for (uint8_t i = 0; i < NUM_SAMPLES; i++)
 		{
-			Vac[i] = (adc_convert_mv((adc0_result[i]) * 20.5) * 1.05);
+			Vac[i] = (adc_convert_mv((adc0_result[i]) * 20.5) );
 			IL[i] = (adc_convert_mv((adc1_result[i])/ 1.1));
 		}
 		
@@ -80,7 +79,6 @@ int main(void)
 		uint16_t localVrms = Vrms;
 		
 		float Irms = sqrt(sum_I / NUM_SAMPLES);
-		uint16_t localIrms = Irms;
 		Ipk = calculateIpk(Irms);
 		uint16_t localIpk = Ipk;
 		
@@ -90,7 +88,6 @@ int main(void)
 		// Stores information inside of character array
 		sprintf(voltage_char, "RMS Voltage is: %d%d.%d\n\r", (uint16_t) (localVrms / 100), (uint16_t) (localVrms / 10.0) % 10, (uint16_t) (localVrms % 10));
 		sprintf(current_char, "Peak Current is: %d mA\n\r", (uint16_t) localIpk);
-		sprintf(rmsCurrent_char, "RMS Current is: %d mA\n\r",(uint16_t) localIrms);
 		sprintf(power_char, "Power is: %d.%d%d\n\r\n\r", (uint16_t)(localPower / 100), (uint16_t) (localPower / 10.0) % 10, (uint16_t) (localPower % 10));
 		
 		// Transmit array to terminal.
@@ -100,19 +97,19 @@ int main(void)
 		_delay_ms(100);
 
 		trans_array(current_char);
-		trans_array(rmsCurrent_char);
 		//uint16_t Irms = sqrt(local_sum_I / NUM_SAMPLES);
 		separate_and_load_characters((uint16_t)(localIpk), 0);
 		_delay_ms(100);
 		
 		separate_and_load_characters((uint16_t)(localPower), 1);
 		trans_array(power_char);
-	 	_delay_ms(100);
 		 
-		 _delay_ms(1000);
+		 _delay_ms(100);
 
 		sum = 0;
 		sum_I = 0;
+		
+
 	 }
 	 
 	  

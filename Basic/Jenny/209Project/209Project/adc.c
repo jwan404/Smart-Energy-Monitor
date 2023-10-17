@@ -62,23 +62,49 @@ float adc_convert_mv(float raw_adc_value) {
 	return voltage_mV;
 }
 
+// ISR(ADC_vect) {
+// 	// This code will be executed every 0.1ms
+// 
+// 	// Variables to track the current channel
+// 	
+// 	for (uint8_t i = 0; i < NUM_SAMPLES; i++) {
+// 		adc0_result[i] = adc_read_channel_single_conversion(0);
+// 
+// 	}
+// 	for (uint8_t j = 0; j < NUM_SAMPLES; j++) {
+// 		adc1_result[j] = adc_read_channel_single_conversion(1);
+// 
+// 	}
+// 
+// 
+// 	//clearing compare match
+// 	TIFR0 |= (1 << OCF0A);
+// }	
+
+// Variables to track the current sample index
+static uint8_t sampleIndex = 0;
+static uint8_t currentChannel = 0;
+
 ISR(ADC_vect) {
-	// This code will be executed every 0.1ms
-
-	// Variables to track the current channel
-	
-	for (uint8_t i = 0; i < NUM_SAMPLES; i++) {
-		adc0_result[i] = adc_read_channel_single_conversion(0);
-
+	// Read from the current channel
+	if (currentChannel == 0) {
+		adc0_result[sampleIndex] = ADC;
+		// Switch to the other channel
+		currentChannel = 1;
+		} else {
+		adc1_result[sampleIndex] = ADC;
+		// Switch back to the first channel
+		currentChannel = 0;
+		// Increment the sampleIndex
+		sampleIndex++;
 	}
-	for (uint8_t j = 0; j < NUM_SAMPLES; j++) {
-		adc1_result[j] = adc_read_channel_single_conversion(1);
 
+	// If all samples are read, reset the sampleIndex
+	if (sampleIndex >= NUM_SAMPLES) {
+		sampleIndex = 0;
 	}
 
-	
-
-
-	//clearing compare match
+	// Clear the compare match flag
 	TIFR0 |= (1 << OCF0A);
-}	
+}
+
